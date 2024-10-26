@@ -11,8 +11,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os 
 
-from decouple import config
+import environ
+env = environ.Env()
+
+# Read environment variables from .env file
+environ.Env.read_env(os.path.join(os.path.dirname(__file__), r'C:\Users\Olix\OneDrive\Desktop\Afrikanvoice\afrikanvoice\.env'))
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +28,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG')
+DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['.vercel.app, .afrikanvoice.com.ng']
+ALLOWED_HOSTS = ['.vercel.app', '.afrikanvoice.com.ng', '127.0.0.1',]
 
 
 
@@ -90,8 +96,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'verceldb',  # Replace with your actual database name
         'USER': 'default',   # Replace with your actual database user
-        'PASSWORD': config('PASSWORD'),  # Replace with your actual database password
-        'HOST': config('HOST'),
+        'PASSWORD': env('PASSWORD'),  # Replace with your actual database password
+        'HOST': env('HOST'),
         'PORT': '5432',  # Assuming the default PostgreSQL port
         'CONN_MAX_AGE': 600,  # (Optional) Set the connection timeout
     }
@@ -152,7 +158,7 @@ LOGOUT_REDIRECT_URL = 'post_list'  # Redirects to the post list after logout
 LOGIN_REDIRECT_URL = 'post_list'  # Redirect to the blog home after login
 LOGIN_URL = 'login'  # Redirect to login page if not authenticated
 
-# Configure Django messages
+# envure Django messages
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
