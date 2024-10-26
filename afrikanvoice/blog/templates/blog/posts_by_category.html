@@ -1,0 +1,21 @@
+<!-- blog/templates/blog/posts_by_category.html -->
+
+{% extends "blog/base_generic.html" %}
+{% block content %}
+    <div class="container">
+        <h2>Posts in {{ category.name }}</h2>
+        <ul>
+            {% for post in posts %}
+                <li>
+                    <a href="{% url 'post_detail' post.slug %}">
+                        <h4>{{ post.title }}</h4>
+                    </a>
+                    <p>{{ post.content|truncatewords:30 }}</p>
+                    {% if post.image_url %}
+                        <img src="{{ post.image_url }}" alt="{{ post.title }}" style="width: 100%; max-width: 400px;">
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

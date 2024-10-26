@@ -1,0 +1,12 @@
+<!-- blog/templates/blog/profile.html -->
+
+{% extends "blog/base_generic.html" %}
+{% block content %}
+    <div class="container">
+        <h2>Profile</h2>
+        <p>Username: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+        <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+        <a href="{% url 'delete_profile' %}" class="btn btn-danger">Delete Account</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A retro-styled dynamic blog with categories, posts, and authors">
+    <title>{% block title %}Afrikan Voice{% endblock %}</title>
+
+    <!-- Google Fonts for Retro Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Pixel font -->
+
+    <style>
+        /* Reset basic styles for consistency */
+        body, h1, h2, h3, p, ul, li, a, form {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #faf3e0;
+            color: #2b2b2b;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Layout for Container */
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        /* Navigation Bar Styling */
+        nav {
+            background-color: #2b2b2b;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        nav a {
+            color: #fff;
+            font-size: 18px;
+            margin: 0 20px;
+            text-transform: uppercase;
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #f4a442;
+            color: #fff;
+        }
+
+        /* Retro Header Styling */
+        header {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(135deg, #333, #5b9bd5);
+            color: white;
+        }
+
+        header h1 {
+            font-size: 4rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        /* Content Styling */
+        .content-container {
+            padding: 40px;
+            background-color: white;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+
+        /* Custom Dropdown for Categories */
+        .dropdown {
+            display: inline-block;
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            text-align: left;
+            padding: 10px;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f4a442;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Toggle Button for Mobile and Tablet */
+        .toggle-btn {
+            display: none;
+            cursor: pointer;
+            font-size: 30px;  /* Increased size */
+            background-color: transparent;
+            border: none;
+            color: white;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            z-index: 1000;  /* Ensure it’s above other elements */
+        }
+
+        /* Toggle Menu */
+        .toggle-menu {
+            display: none;
+            background-color: #333;
+            text-align: left;
+            padding: 20px;
+            position: absolute;
+            width: 100%;
+            top: 50px;
+            left: 0;
+            z-index: 10;
+        }
+
+        .toggle-menu a {
+            display: block;
+            color: white;
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+
+        .toggle-menu a:hover {
+            background-color: #f4a442;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .toggle-btn {
+                display: inline-block;
+            }
+
+            nav a {
+                display: none;
+            }
+
+            .toggle-menu {
+                display: none;
+            }
+
+            .toggle-menu.active {
+                display: block;
+            }
+        }
+
+        /* Retro Footer Styling */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2b2b2b;
+            color: white;
+            margin-top: 40px;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+        }
+
+        /* Light/Dark Mode Toggle Switch Styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 20px;
+            vertical-align: middle;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Dark mode styling with black text */
+        body.dark-mode {
+            background-color: #121212;
+            color: black;  /* Set text color to black */
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        nav.dark-mode {
+            background-color: #1e1e1e;
+        }
+
+        .content-container.dark-mode {
+            background-color: #1e1e1e;
+            color: black; /* Set content text color to black */
+        }
+
+        footer.dark-mode {
+            background-color: #1e1e1e;
+            color: black; /* Set footer text color to black */
+        }
+    </style>
+    <style>
+        /* Pagination Styling */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+        }
+    
+        .pagination .page-item {
+            margin: 0 5px;
+        }
+    
+        .pagination .page-link {
+            font-family: 'Press Start 2P', cursive;  /* Retro font */
+            padding: 10px 20px;
+            border: 2px solid #333;
+            color: #333;
+            background-color: wheat;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    
+        .pagination .page-link:hover {
+            background-color: #f4a442;
+            color: #fff;
+        }
+    
+        .pagination .active .page-link {
+            background-color: #25b15f;
+            color: #fff;
+            border-color: #333;
+        }
+    
+        .pagination .active .page-link:hover {
+            background-color: #3dac11;
+            color: #fff;
+        }
+    </style>
+    <style>
+        /* Retro Button Styling */
+        .retro-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;  /* Retro font */
+            font-size: 14px;
+            background-color: #333;
+            color: #fff;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 3px solid #fff;
+            border-radius: 0;  /* No rounded corners for a pixelated look */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: 0 4px 0 #000;  /* Creates a 3D effect */
+        }
+    
+        .retro-button:hover {
+            background-color: #f4a442;
+            color: #fff;
+            border-color: #f4a442;
+            box-shadow: 0 4px 0 #333;  /* Darker shadow for hover effect */
+        }
+    
+        .retro-button:active {
+            box-shadow: none;  /* Removes shadow on click for a "pressed" look */
+            transform: translateY(4px);  /* Makes it look pressed */
+        }
+    </style>
+<style>
+    .card-img {
+        width: 100%;            /* Ensures the image takes the full width of the card */
+        height: 100%;          /* Set a fixed height for consistency across all cards */
+        object-fit: cover;      /* Ensures the image covers the entire area without distortion */
+        margin: 0 auto;         /* Centers the image */
+        border-radius: 5px;     /* Optional: Rounded corners to match the card */
+    }
+
+    /* To align text and image consistently, adjust the card body padding */
+    .card-body {
+        padding: 20px;          /* Consistent padding between the image and the text */
+    }
+</style>
+
+    {% block extra_css %}
+    {% endblock %}
+</head>
+<body class="retro-bg">
+
+    <!-- Retro Header -->
+    <header>
+        <div class="container">
+            <h1>Afrikan Voice 🌍</h1>
+        </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="container">
+            <!-- Toggle Button for Mobile and Tablet (changes to X when active) -->
+            <button class="toggle-btn" id="toggleButton" onclick="toggleMenu()">☰</button>
+
+            <!-- Navigation Links -->
+            <a href="{% url 'post_list' %}">Home</a>
+
+            <!-- Category Dropdown -->
+            <div class="dropdown">
+                <a href="javascript:void(0)">Categories</a>
+                <div class="dropdown-content">
+                    {% for category in categories %}
+                    <a href="{% url 'posts_by_category' category.slug %}">{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'add_post' %}">New Post</a>
+            <a href="{% url 'add_category' %}">New Category</a>
+            <a href="{% url 'profile' %}">Profile</a>
+            <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <a href="#" onclick="this.closest('form').submit();" style="color: red; cursor: pointer; text-decoration: none;">
+                    Logout
+                </a>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+
+            <!-- Dark Mode Switch -->
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Toggle Menu for Mobile/Tablet -->
+        <div class="toggle-menu" id="mobileMenu">
+            <a href="{% url 'post_list' %}">Home</a>
+            <div class="dropdown">
+                <a href="javascript:void(0)">Categories</a>
+                <div class="dropdown-content">
+                    {% for category in categories %}
+                    <a href="{% url 'posts_by_category' category.slug %}">{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'add_post' %}">New Post</a>
+            <a href="{% url 'add_category' %}">New Category</a>
+            <a href="{% url 'profile' %}">Profile</a>
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <a href="#" onclick="this.closest('form').submit();" style="color: red; cursor: pointer; text-decoration: none;">
+                    Logout
+                </a>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container content-container">
+        {% block content %}
+        <!-- Page-specific content goes here -->
+        {% endblock %}
+    </div>
+
+    <!-- Retro Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="year"></span> Afrikan Voice. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Get the current year dynamically for the footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Toggle the mobile menu and switch between ☰ and X
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const toggleButton = document.getElementById('toggleButton');
+
+            menu.classList.toggle('active');
+            
+            // Switch between ☰ and X
+            if (menu.classList.contains('active')) {
+                toggleButton.innerHTML = '✖';
+            } else {
+                toggleButton.innerHTML = '☰';
+            }
+        }
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        // Check for previously saved mode in localStorage
+        const savedMode = localStorage.getItem('darkMode');
+        if (savedMode === 'enabled') {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
+
+        darkModeToggle.addEventListener('change', function () {
+            if (this.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+    </script>
+
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

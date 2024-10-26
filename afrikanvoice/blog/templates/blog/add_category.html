@@ -1,0 +1,17 @@
+<!-- blog/templates/blog/add_category.html -->
+
+{% extends "blog/base_generic.html" %}
+{% block content %}
+    <div class="container">
+        <h2 class="retro-heading">Add a New Category</h2>
+
+        <!-- Form for adding a new category -->
+        <form method="POST" class="retro-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <!-- Submit button styled for a retro look -->
+            <button type="submit" class="retro-btn">Submit</button>
+        </form>
+    </div>
+{% endblock %}
